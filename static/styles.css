@@ -109,6 +109,7 @@ body {
 .content {
     padding: 10px;
     text-align: center;
+    min-height: 26em;
 }
 
 /*Login page*/
