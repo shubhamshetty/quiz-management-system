@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Quiz Portal</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        /* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*Navbar*/
+.logo {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.navbar {
+    background-color: #3f51b5;
+    overflow: hidden;
+    padding: 15px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+        display: none;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+}
+
+.navbar a:hover {
+    background-color: #5268db;
+}
+
+.logout {
+    background-color: #d32f2f;
+}
+
+.content {
+    padding: 0px;
+    text-align: center;
+}
+
+.welcome-message {
+    font-size: 18px;
+}
+
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger-icon {
+    width: 30px;
+    height: 2px;
+    background-color: white;
+    margin: 4px 0;
+}
+
+.hamburger-menu {
+    display: flex;
+}
+
+.navbar a.logout {
+    background-color: #d32f2f;
+    margin-top: 10px;
+    display:block;
+}
+
+/*body*/
+.quadrant {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tile {
+    background-color: #e0e0e0;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 45%; 
+}
+
+.tile:hover {
+    background-color: #c0c0c0;
+}
+
+.tile h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.tile p {
+    font-size: 16px;
+    color: #555;
+}
+
+/*footer*/
+.footer {
+    background-color: #3f51b5;
+    color: white;
+    text-align: center;
+    margin: inherit;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.quiz-options {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+.quiz-category {
+    background-color: #e0e0e0;
+    padding: 3%;
+    margin: 1%;
+    border-radius: 8px;
+    flex-basis: calc(45% - 1%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+    width: 35%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quiz-category:hover {
+    transform: translateY(-5px);
+}
+
+h2 {
+    color: #333;
+}
+
+a {
+    display: block;
+    padding: 10px 15px;
+    color: #100404;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.result-section, .view-results {
+    text-align: center;
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    width: 300px;
+}
+
+.view-results {
+    margin: 0 auto;
+}
+
+.quiz-container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.question {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.options {
+    list-style-type: none;
+    padding: 0;
+}
+
+.option {
+    margin-bottom: 8px;
+}
+
+.submit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 1;
+    margin-right: 12px;
+}
+
+.dropdown a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {
+    background-color: #31335d;
+}
+
+.show {
+    display: block;
+    background-color: #ffffff00;
+    margin-top: 26px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Student</div>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+            </div>
+            <div class="dropdown" id="logout-dropdown">
+                <a href='{% url "home" %}' class="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="quiz-options">
+    {% for category in category_obj %}
+        <div class="quiz-category">
+            <a href="{% url 'quiz_dashboard' student_id=unique_id category_id=category.id %}">
+                <h2>{{ category.category_name }}</h2>
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Navbar Dropdown logic
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

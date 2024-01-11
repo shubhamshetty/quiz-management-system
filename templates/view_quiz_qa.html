@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Question</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Admin</div>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+            </div>
+            <div class="dropdown" id="logout-dropdown">
+                <a href='{% url "admin" %}' class="logout">Home</a>
+                <a href='{% url "home" %}' class="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="question-container">
+        {% for result in data%}
+        <h2 class="view_quiz_question">{{result.question_text}}</h2>
+            
+        <div class="options-container">
+            <div class="view_quiz_question_option">
+                <input type="radio" style="width:5%;" name="answer" id="option1" disabled>
+                <label for="option1" style="margin-top: 0px;">{{result.option1}}</label>
+            </div>
+
+            <div class="option">
+                <input type="radio" style="width:5%;" name="answer" id="option2" disabled>
+                <label for="option2"style="margin-top: 0px;">{{result.option2}}</label>
+            </div>
+
+            <div class="option">
+                <input type="radio" style="width:5%;" name="answer" id="option3" disabled>
+                <label for="option3"style="margin-top: 0px;">{{result.option3}}</label>
+            </div>
+
+            <div class="option">
+                <input type="radio" style="width:5%;" name="answer" id="option4" disabled>
+                <label for="option4"style="margin-top: 0px;">{{result.option4}}</label>
+            </div>  
+            <br>
+            <div class="option">
+                <label for="correct_option"style="margin-top: 0px;">Correct Answer: {{result.correct_option}}</label>
+            </div>
+
+
+        </div>
+        
+        {% endfor %}
+    </div>
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Navbar Dropdown logic
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="hamburger-menu" onclick="toggleMenu()">
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+        </div>
+        <div class = "dropdown" id = "logout-dropdown">
+            <a href='{% url "home"%}' class="logout">Home</a>
+        </div>
+    </div>
+
+    <div class="register_container">
+        <h1 class = "register_h1">User Registration</h1>
+        <form class="register_form" method="post" >
+            {% csrf_token %}
+            <label class="label_register" for="user_name">Enter your username:</label>
+            <input class="input_register" type="text" id="user_name" name="user_name" required><br>
+
+            <label class="label_register" for="password">Enter your password:</label>
+            <input class="input_register" type="password" id="password" name="password" required><br>
+
+            <label class="label_register" for="user_type">Select user type:</label>
+            <select class="select_register" name="user_type" id = 'user_type' required onchange="toggleUniqueId()">
+                <option selected disabled="true">-- Select User Type --</option>
+                <option value = 'Student'>Student</option>
+                <option value = 'Admin'>Admin</option>
+            </select><br>
+            <div id="unique_id_field" style="display: none;">
+                <label for="unique_id">Enter a unique ID:</label>
+                <input type="text" id="unique_id" name="unique_id"><br><br>
+            </div>
+            <button class="register_btn" type="submit">Register</button>
+            <a class="a_register" href="{% url 'home'%}">Home</a>
+            <tr>
+                <td colspan="2">
+                    {% if messages %}
+                        {% for mess in messages %}
+                            <b class = 'success'>{{ mess }}</b>
+                        {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+    <script>
+        function toggleUniqueId() {
+            var userTypeSelect = document.getElementById('user_type');
+            var uniqueIdField = document.getElementById('unique_id_field');
+
+            if (userTypeSelect.value === 'Student') {
+                uniqueIdField.style.display = 'block';
+            } else {
+                uniqueIdField.style.display = 'none';
+            }
+        }
+        // Function to toggle HamburgerMenu
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show')
+        }
+    </script>
+</body>
+</html>

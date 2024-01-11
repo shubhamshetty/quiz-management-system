@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Homepage</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Admin</div>
+        <div class="hamburger-menu" onclick="toggleMenu()">
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+        </div>
+        <div class="dropdown" id="logout-dropdown">
+            <a href='{% url "admin" %}' class="logout">Home</a>
+            <a href='{% url "home" %}' class="logout">Logout</a>
+        </div>
+    </div>
+    </div>
+
+    <div class="content">
+        <p>This is admin homepage. Choose an option:</p>
+        <div class="quadrant">
+            <div class="tile" id="view-quizzes-tile">
+                <h2>View Quiz</h2>
+                <p>View existing quizzes.</p>
+            </div>
+            <div class="tile" id="create-quizzes-tile">
+                <h2>Create New Quiz</h2></a>
+                <p>Create a new quiz.</p>
+            </div>
+        </div>
+
+        <div class="quadrant">
+            <div class="tile" id="modify-quizzes-tile">
+                <h2>Modify Existing Quiz</h2></a>
+                <p>Modify an existing quiz.</p>
+            </div>
+            <div class="tile" id="delete-quizzes-tile">
+                <h2>Delete Quiz</h2>
+                <p>Delete an existing quiz.</p>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+
+
+    <script>
+        // Navbar Dropdown logic
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+    
+        // Add event listener to handle the click on the "View Quiz" tile
+        document.getElementById('view-quizzes-tile').addEventListener('click', function () {
+            window.location.href = '{% url "view_quizzes" %}';
+        });
+    
+        // Add event listener to handle the click on the "Create Quiz" tile
+        document.getElementById('create-quizzes-tile').addEventListener('click', function () {
+            window.location.href = '{% url "create_quiz" %}';
+        });
+    
+        // Add event listener to handle the click on the "Create Quiz" tile
+        document.getElementById('modify-quizzes-tile').addEventListener('click', function () {
+            window.location.href = '{% url "modify" %}';
+        });
+    
+        // Add event listener to handle the click on the "Create Quiz" tile
+        document.getElementById('delete-quizzes-tile').addEventListener('click', function () {
+            window.location.href = '{% url "delete" %}';
+        });
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Homepage</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Admin</div>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+            </div>
+            <div class="dropdown" id="logout-dropdown">
+                <a href='{% url "admin" %}' class="logout">Home</a>
+                <a href='{% url "home" %}' class="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="del_h1"> Delete Quizzes</h1>
+    <div class="content">
+        <!-- Tiles for quizzes -->
+        {% for result in data %}
+        <div class="quiz-tile">
+            <div class="quiz-info">
+                <h2>{{result.quiz_name}}</h2>
+                <p>{{result.description}}</p>
+            </div>
+            <button class="delete-quiz-btn"><a class="modify_a" href="delete/{{result.id}}" class="delete-quiz-btn"
+                    onclick="return confirm('Are you sure to delete the record?')">Delete</a></button>
+        </div>
+        {% endfor%}
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Navbar Dropdown logic
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Function to delete quiz (you can implement the actual delete logic)
+        function deleteQuiz(quizId) {
+            // Implement the logic to delete the quiz with the given quizId
+            console.log('Deleting Quiz:', quizId);
+        }
+
+    </script>
+
+</body>
+
+</html>

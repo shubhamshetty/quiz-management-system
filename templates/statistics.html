@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Visualization</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .statistics-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        .bar {
+
+            height: 900px;
+
+            display: inline-block;
+            margin: 6% auto;
+            max-width: 5000px;
+        }
+        .dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 1;
+    margin-right: 12px;
+}
+
+.dropdown a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {
+    background-color: #31335d;
+}
+
+.show {
+    display: block;
+    background-color: #ffffff00;
+    margin-top: 26px;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Student</div>
+        <div class="hamburger-menu" onclick="toggleMenu()">
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+        </div>
+        <div class="dropdown" id="logout-dropdown">
+            <a href='{% url "home" %}' class="logout">Logout</a>
+        </div>
+    </div>
+    </div>
+
+    <!-- Display statistics -->
+    <h1>Test Statistics</h1>
+
+    <div class="statistics-container">
+        <h2>Your Statistics</h2>
+        <p>Your Score: {{ student_score }} / 5</p>
+        <p>Your Rank: {{ rank }}</p>
+
+        <h2>Overall Statistics</h2>
+        <p>Average Score: {{ avg_score|default:"N/A" }} / 5</p>
+        <p>Highest Score: {{ high_score|default:"N/A" }} / 5</p>
+        <p>Lowest Score: {{ low_score|default:"N/A" }} / 5</p>
+    </div>
+
+    <!-- Create a canvas for the bar chart -->
+    <div class="bar">
+        <canvas id="scoreChart" width="1000" height="200"></canvas>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Access the variables from the Django context
+        var studentScore = {{ student_score }};
+        var averageScore = {{ avg_score }};
+        var highestScore = {{ high_score }};
+        var lowestScore = {{ low_score }};
+
+        console.log('Student Score:', studentScore);
+
+        // Create a bar chart
+        var ctx = document.getElementById('scoreChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Student Score', 'Average Score', 'Highest Score', 'Lowest Score'],
+                datasets: [{
+                    label: 'Scores',
+                    data: [studentScore, averageScore, highestScore, lowestScore],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        // Navbar Dropdown logic
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+    </script>
+
+</body>
+
+</html>

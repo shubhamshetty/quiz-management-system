@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="hamburger-menu" onclick="toggleMenu()">
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+        </div>
+        <div class="dropdown" id="logout-dropdown">
+            <a href='{% url "home"%}' class="logout">Home</a>
+        </div>
+    </div>
+    <div class="login_container">
+        <h1 class="login_h1">LOG IN</h1>
+        <form method="POST" id="loginForm">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Username</td>
+                    <td><input class="login_txt" type="text" placeholder="Enter Username" name="username"></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input class="login_txt" type="password" placeholder="Enter Password" name="password"></td>
+                </tr>
+                <tr>
+                    <td>User Type</td>
+                    <td>
+                        <select class="login_txt" name="user_type">
+                            <option selected disabled="true">-- Select User Type --</option>
+                            <option>Student</option>
+                            <option>Admin</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input class="login_submit_btn" type="submit" value="Login" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {% if messages %}
+                        {% for mess in messages %}
+                        <b class="error">{{ mess }}</b>
+                        {% endfor %}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            <a class='change_password' href="{% url 'forgot_password' %}">Forgot Password</a>
+        </form>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+    <script>
+        // Function to toggle HamburgerMenu
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show')
+        }
+    </script>
+
+</body>
+
+</html>

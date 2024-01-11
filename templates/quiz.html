@@ -1,0 +1,317 @@
+<!-- quiz/templates/quiz/quiz_page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <style>
+        /* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*Navbar*/
+.logo {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #3f51b5;
+    overflow: hidden;
+    padding: 15px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.navbar a {
+        display: none;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+}
+
+.navbar p {
+    margin-right: 3%;
+}
+
+.navbar a:hover {
+    background-color: #5268db;
+}
+
+.logout {
+    background-color: #d32f2f;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    margin-bottom: 5%;
+}
+
+.welcome-message {
+    font-size: 18px;
+}
+
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger-icon {
+    width: 30px;
+    height: 2px;
+    background-color: white;
+    margin: 4px 0;
+}
+
+.hamburger-menu {
+    display: flex;
+}
+
+.navbar a.logout {
+    background-color: #d32f2f;
+    margin-top: 10px;
+    display:block;
+}
+
+/*body*/
+.quadrant {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tile {
+    background-color: #e0e0e0;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 45%;
+}
+
+.tile:hover {
+    background-color: #c0c0c0;
+}
+
+.tile h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.tile p {
+    font-size: 16px;
+    color: #555;
+}
+
+/*footer*/
+.footer {
+    background-color: #3f51b5;
+    color: white;
+    text-align: center;
+    margin: inherit;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.quiz-options {
+    display: flex;
+    justify-content: space-around;
+    margin: 100px 0;
+}
+
+.quiz-category {
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+    width: 300px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quiz-category:hover {
+    transform: translateY(-5px);
+}
+
+h2 {
+    color: #333;
+}
+
+a {
+    display: block;
+    padding: 10px 15px;
+    color: #100404;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.result-section, .view-results {
+    text-align: center;
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    width: 300px;
+}
+
+.view-results {
+    margin: 0 auto;
+}
+
+.quiz-container {
+    max-width: 600px;
+    margin: auto;
+}
+
+form#quizForm {
+    display: flex;
+    flex-direction: column;
+    margin-top: 80px;
+}
+
+p.question {
+    font-size: 100%; 
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+    margin-right: 5%;
+    border: 1px solid #ccc;
+}
+
+
+.submit-button {
+    margin-top: 5%;
+    padding: 2% 4%;
+    font-size: 80%;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #5268db;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 60px 120px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+}
+
+.popup h2 {
+color: #3f51b5;
+font-size: 60px;
+margin-bottom: 60px;
+}
+
+.popup button {
+    padding: 14px 28px; 
+    font-size: 16px;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <span class="welcome-message">Quiz</span>
+        <p>Time Left: <span id="timer">{{ timer }}</span></p>
+        <script>
+            var timer = parseInt("{{ timer|default:0 }}", 10); // 10 minutes in seconds
+
+            function updateTimer() {
+                var minutes = Math.floor(timer / 60);
+                var seconds = timer % 60;
+                document.getElementById('timer').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            }
+
+            function countdown() {
+                if (timer > 0) {
+                    timer--;
+                    updateTimer();
+                    setTimeout(countdown, 1000);
+                } else {
+                    document.getElementById('timeUpPopup').style.display = 'block';
+                }
+            }
+
+            function submitQuiz() {
+                // Submit the form when the user clicks "Submit Quiz" in the pop-up
+                document.getElementById('quizForm').submit();
+            }
+
+            countdown();
+        </script>
+        <!-- <a href="#" class="logout">Logout</a> -->
+    </div>
+    <div class="content">
+        <form id="quizForm" method="post" action="{% url 'submit_quiz' unique_id=unique_id  quiz_id=quiz_id category_id=category_id %}">
+            {% csrf_token %}
+        
+            {% for question, question_options in options.items %}
+            <div>
+                <p class="question">{{ question }}</p>
+                <input type="checkbox" name="answer_{{ question_options.ques_id }}" value="{{ question_options.a }}"> {{ question_options.a }}<br>
+                <input type="checkbox" name="answer_{{ question_options.ques_id }}" value="{{ question_options.b }}"> {{ question_options.b }}<br>
+                <input type="checkbox" name="answer_{{ question_options.ques_id }}" value="{{ question_options.c }}"> {{ question_options.c }}<br>
+                <input type="checkbox" name="answer_{{ question_options.ques_id }}" value="{{ question_options.d }}"> {{ question_options.d }}<br>
+            </div>
+            {% endfor %}
+        
+            <button type="submit" class="submit-button">Submit Quiz</button>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+
+    <!-- Popup for Time is up! -->
+    <div id="timeUpPopup" class="popup">
+        <h2>Time is up!</h2>
+        <button onclick="submitQuiz()">OK</button>
+    </div>
+</body>
+</html>

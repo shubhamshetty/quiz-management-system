@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Homepage</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Admin</div>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+            </div>
+            <div class="dropdown" id="logout-dropdown">
+                <a href='{% url "admin" %}' class="logout">Home</a>
+                <a href='{% url "home" %}' class="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+     <center>
+          <h1>Update Quiz Info</h1>
+          <hr/>
+          <br>
+          {% for result in data %}
+          <div class = "upd_form">
+          <form method="POST"  action="/update/{{result.ques_id}}">
+              {% csrf_token %}
+          <table class = "table_style" border="1">
+             
+              <tr>
+                  <td>Question</td>
+                  <td><input type="text" name="questions" value="{{ result.question_text }}" ></td> 
+              </tr>    
+              <tr>
+                <td>Option1</td>
+                <td><input type="text" name="option1" value="{{ result.option1 }}"></td>
+            </tr>
+            <tr>
+                <td>Option2</td>
+                <td><input type="text" name="option2" value="{{ result.option2 }}"></td>
+            </tr>
+            <tr>
+                <td>Option3</td>
+                <td><input type="text" name="option3" value="{{ result.option3 }}"></td>
+            </tr>
+            <td>Option4</td>
+            <td><input type="text" name="option4" value="{{ result.option4 }}"></td>
+            <tr>
+            <tr>
+                <td>Correct option</td>
+                <td><input type="text" name="correct_option" value="{{ result.correct_option }}"></td>
+            </tr>
+
+             
+             <tr>
+                 <td><input class="upd-results-btn" type="submit" value="Update Quiz"></td>
+                 <td><button class="upd-del-btn"><a href="{% url 'delete_question' id=result.ques_id %}"  onclick="return confirm('Are you sure to delete the question?')">Delete</a></button>
+                 </td>
+                 
+             </tr>
+          </table>    
+          </form>
+        </div>
+          <br>
+          {% endfor %} 
+          <br>
+          <div class="questionsContainer" id="questionsContainer"></div>
+          <button type="button" onclick="addQuestion()">Add Question</button>
+          <td>
+            {% if messages %}
+                {% for mess in messages %}
+                    <b style="color:green;">{{ mess }}</b>
+                {% endfor %}
+            {% endif %}
+        </td>
+      </center> 
+      <footer class="footer_dynamic">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+  </body>
+  <script>
+    function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+    function addQuestion() {
+        var questionsContainer = document.getElementById('questionsContainer');
+        var newQuestion = document.createElement('div');
+        var id = {{ id }}
+        newQuestion.className = 'question';
+        newQuestion.innerHTML =`
+        <form method="POST" class="questionsContainer" id="questionsContainer" action="{% url 'add_question' id=id %}">
+              {% csrf_token %}
+          <table border="1">
+             
+              <tr>
+                  <td>Question</td>
+                  <td><input type="text" name="new_question"  ></td> 
+              </tr>    
+              <tr>  
+                  <td>Option1</td>
+                  <td><input type="text" name="new_option1"></td>
+                  </tr>
+                  <tr>  
+                  <td>Option2</td>
+                  <td><input type="text" name="new_option2"></td>
+                </tr>
+                <tr>  
+                  <td>Option3</td>
+                  <td><input type="text" name="new_option3"></td>
+                </tr>
+                <tr>
+                  <td>Option4</td>
+                
+                  <td><input type="text" name="new_option4"></td>
+                  
+              </tr>
+              <tr>  
+                 <td>Correct option</td>
+                 <td><input type="text" name="new_correct_option"></td>
+             </tr>             
+             <tr>
+                 <td><input type="submit" value="Add"></td>
+                 
+             </tr>
+             <button><a href="{% url 'delete_question' id=id %}"  onclick="return confirm('Are you sure to delete the question?')">Delete</a></button>
+
+          </table>    
+          </form>
+        `
+        questionsContainer.appendChild(newQuestion);
+    }
+  </script>
+  </html>
+ 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Homepage</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Admin</div>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+            </div>
+            <div class="dropdown" id="logout-dropdown">
+                <a href='{% url "admin" %}' class="logout">Home</a>
+                <a href='{% url "home" %}' class="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <tr>
+        <td colspan="2">
+            {% if messages %}
+            {% for mess in messages %}
+            <b class="error">{{ mess }}</b>
+            {% endfor %}
+            {% endif %}
+        </td>
+    </tr>
+    <div class="cq_content">
+        
+        <h1>Create New Quiz</h1>
+        <form id="quizForm" method="POST">
+            {%csrf_token%}
+            <input type="hidden" id="questionCount" name="question_count" value="">
+
+            <label class ="cq_label" for="quizCategory">Quiz Category:</label>
+            <!-- Category dropdown -->
+            <label class ="cq_label" for="category">Select Category:</label>
+            <select id="category" name="category" onchange="handleCategoryChange()">
+                <option></option>
+                {% for category in data%}
+                <option value='{{category.category_name}}'>{{category.category_name}}</option>
+                {% endfor %}
+                <option value="AddNew">Add a new</option>
+            </select>
+
+            <!-- Input field for new category -->
+            <div id="newCategoryInput" style="display: none;">
+                <label for="newCategory">New Category:</label>
+                <input type="text" id="newCategory" name="newCategory">
+            </div>
+
+            <label class ="cq_label"  for="quizName">Quiz Name:</label>
+            <input type="text" id="quizName" name="quizName" required>
+
+            <label class ="cq_label" for="quizDescription">Quiz Description:</label>
+            <textarea id="quizDescription" name="quizDescription" rows="4" required></textarea>
+
+            <label class ="cq_label" for="adminName">Admin username:</label>
+            <textarea name="adminName" id="adminName" required></textarea>
+            
+            <label class ="cq_label" for="timer">Timer (minutes):</label>
+            <input type="number" id="timer" name="timer" min="1" required>
+            
+
+            <div id="questionsContainer">
+                <div class="question">
+                    <label class ="cq_label" for="question1">Question 1:</label>
+                    <input type="text" id="question1" name="question[1]" required>
+
+                    <label class ="cq_label" for="option1">Option 1:</label>
+                    <input type="text" id="option11" name="option1[1]" oninput="handleOptionChange(1)" required>
+
+                    <label class ="cq_label" for="option2">Option 2:</label>
+                    <input type="text" id="option21" name="option2[1]" oninput="handleOptionChange(1)" required>
+
+                    <label class ="cq_label" for="option3">Option 3:</label>
+                    <input type="text" id="option31" name="option3[1]" oninput="handleOptionChange(1)">
+
+                    <label class ="cq_label" for="option4">Option 4:</label>
+                    <input type="text" id="option41" name="option4[1]" oninput="handleOptionChange(1)">
+
+                    <label class ="cq_label" for="correctValues1">Correct Values:</label>
+                    <input type="text" id="correctValues1" name="correct_answer[1]"
+                        placeholder="If multiple correct answers, please provide comma-seperated values">
+                </div>
+            </div>
+
+            <button class="addq_button" type="button" onclick="addQuestion()">Add Question</button>
+            <button class="submit_button" type="submit">Submit Quiz</button>
+        </form>
+    </div>
+
+    <footer class="footer_dynamic">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // New Category addition
+        function handleCategoryChange() {
+            var categoryDropdown = document.getElementById('category');
+            var newCategoryInput = document.getElementById('newCategoryInput');
+            if (categoryDropdown.value === 'AddNew') {
+                newCategoryInput.style.display = 'block';
+            } else {
+                newCategoryInput.style.display = 'none';
+            }
+        }
+
+
+        function handleOptionChange(questionNumber) {
+            var correctOptions = document.querySelectorAll(`#option${questionNumber} .correct-options input`);
+            var options = document.querySelectorAll(`#option${questionNumber} .option`);
+
+            // Enable checkboxes corresponding to entered options
+            options.forEach(function (option, index) {
+                var checkbox = correctOptions[index];
+                checkbox.disabled = option.value.trim() === "";
+
+                // Set the value of the checkbox to the option value
+                checkbox.value = `option${index + 1}_${questionNumber}`;
+            });
+        }
+
+        var questionCount = 1;
+
+        function addQuestion() {
+            var questionsContainer = document.getElementById('questionsContainer');
+            // var questionCount = questionsContainer.getElementsByClassName('question').length + 1;
+
+            var newQuestion = document.createElement('div');
+            newQuestion.className = 'question';
+
+            questionCount++;
+
+
+            newQuestion.innerHTML = `
+            <label class ="cq_label" for="question${questionCount}">Question ${questionCount}:</label>
+            <input type="text" id="question${questionCount}" name="question[${questionCount}]" required>
+
+            <label class ="cq_label" for="option1">Option 1:</label>
+            <input type="text" id="option1${questionCount}" name="option1[${questionCount}]"  oninput="handleOptionChange(${questionCount})" required>
+
+            <label class ="cq_label" for="option2">Option 2:</label>
+            <input type="text" id="option2${questionCount}" name="option2[${questionCount}]"  oninput="handleOptionChange(${questionCount})" required>
+
+            <label class ="cq_label" for="option3">Option 3:</label>
+            <input type="text" id="option3${questionCount}" name="option3[${questionCount}]"  oninput="handleOptionChange(${questionCount})" >
+
+            <label  class ="cq_label"for="option4">Option 4:</label>
+            <input type="text" id="option4${questionCount}" name="option4[${questionCount}]" oninput="handleOptionChange(${questionCount})" >
+
+            <label class ="cq_label" for="correctValues1">Correct Values:</label>
+            <input type="text" id="correctValues${questionCount}" name="correct_answer[${questionCount}]" placeholder="If multiple correct answers, please provide comma-seperated values">
+        `;
+            questionsContainer.appendChild(newQuestion);
+
+            document.getElementById('option1' + questionCount).addEventListener('input', function () {
+                handleOptionChange(questionCount);
+            });
+            handleOptionChange(questionCount);
+
+            document.getElementById('questionCount').value = questionCount;
+            console.log(questionCount)
+        }
+        
+    </script>
+
+</body>
+
+</html>

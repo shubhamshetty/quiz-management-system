@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forget Password</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="hamburger-menu" onclick="toggleMenu()">
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+            <div class="hamburger-icon"></div>
+        </div>
+        <div class = "dropdown" id = "logout-dropdown">
+            <a href='{% url "home"%}' class="logout">Home</a>
+        </div>
+    </div>
+    <div class="forgot_container">
+    <h1>Forget Password</h1>
+    <form id="forgetPasswordForm" method="POST">
+        {% csrf_token %}
+        <label class="label_register" for="username">Username:</label>
+        <input class="input_register" type="text" id="username" name="username" required>
+
+        <label class="label_register" for="password">New Password:</label>
+        <input class="input_register" type="text" id="password" name="password" required><br>
+
+        <button class="register_btn" type="submit">Change Password</button>
+        <tr>
+            <td colspan="2">
+                {% if messages %}
+                    {% for mess in messages %}
+                        <b>{{ mess }}</b>
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    </form>
+</div>
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+    <script>
+        // Function to toggle HamburgerMenu
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show')
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!-- quiz_comparison.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        table {
+    border-collapse: collapse;
+    width: 70%;
+    margin: 40px auto 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    color: #100404;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.navbar {
+    background-color: #3f51b5;
+    overflow: hidden;
+    padding: 15px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+        display: none;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+}
+
+.navbar a:hover {
+    background-color: #5268db;
+}
+.footer {
+    background-color: #3f51b5;
+    color: white;
+    text-align: center;
+    margin: inherit;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.not-available{
+    background-color: #e0e0e0;
+    border: none;
+    padding: 10px;
+    color: #100404
+}
+
+.take-quiz-btn{
+    background-color: #3f51b5;
+    border: none;
+    padding: 10px;
+    color: white
+}
+
+.take-quiz-btn:hover {
+    background-color: #1b276e;
+}
+
+.show-results-button{
+    background-color: #3f51b5;
+    border: none;
+    padding: 10px;
+    color: white
+}
+
+.show-results-button:hover {
+    background-color: #1b276e;
+}
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">QMS</div>
+        <div class="welcome-message">Welcome, Student</div>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+                <div class="hamburger-icon"></div>
+            </div>
+            <div class="dropdown" id="logout-dropdown">
+                <a href='{% url "home" %}' class="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Quiz Name</th>
+                <th>Attempt 1 Score </th>
+                <th>Attempt 2 Score </th>
+                <th>Number of Attempts</th>
+                <th>Action</th>
+                <th>Results</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quiz_id, quiz_data in student_data.items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ quiz_data.quiz_name }}</td>
+                    <td>{{ quiz_data.score_1 }}</td>
+                    <td>{{ quiz_data.score_2 }}</td>
+                    <td>{{ quiz_data.no_of_attempts }}</td>
+                    <td>
+                        {% if quiz_data.take_quiz %}
+                        <a href="{% url 'take_quiz' category_id=category quiz_id=quiz_id unique_id=unique_id %}">
+                            <button type="button" class="take-quiz-btn">Take Quiz</button>
+                        </a>
+                        {% else %}
+                            <button class="not-available" disabled>Take Quiz</button>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if quiz_data.no_of_attempts > 0 %}
+                        <a href="{% url 'view_stats' quiz_id=quiz_id unique_id=unique_id %}">
+                            <button type="button" class="show-results-button">Results</button>
+                        </a>
+                        {% else %}
+                        <button class="not-available" disabled>Show Results</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <footer class="footer">
+        <p>&copy; 2023 QMS.Inc. All rights reserved.</p>
+    </footer>
+    <script>
+        // Navbar Dropdown logic
+        function toggleMenu() {
+            var dropdown = document.getElementById('logout-dropdown');
+            dropdown.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
