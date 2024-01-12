@@ -1,4 +1,3 @@
-```markdown
 # Quiz Management System
 
 The Quiz Management System is a Django web application designed for quiz app management.
